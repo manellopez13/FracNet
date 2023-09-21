@@ -132,3 +132,10 @@ dmypy.json
 
 # vscode settings
 .vscode/
+
+# Packages
+fastai/
+fastprogress/
+
+# Output files
+*.out

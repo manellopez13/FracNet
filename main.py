@@ -1,6 +1,6 @@
 from functools import partial
 
-from torch import save
+from torch import save, nn
 
 from fastai.basic_train import Learner
 from fastai.train import ShowGraph
@@ -21,7 +21,7 @@ def main(args):
     val_label_dir = args.val_label_dir
 
     batch_size = 4
-    num_workers = 4
+    num_workers = 0
     optimizer = optim.SGD
     criterion = MixLoss(nn.BCEWithLogitsLoss(), 0.5, DiceLoss(), 1)
 
