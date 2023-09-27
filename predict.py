@@ -8,7 +8,7 @@ import torch.nn as nn
 from scipy import ndimage
 from skimage.measure import label, regionprops
 from skimage.morphology import disk, remove_small_objects
-from tqdm import tqdm
+# from tqdm import tqdm
 
 from dataset.fracnet_dataset import FracNetInferenceDataset
 from dataset import transforms as tsfm
@@ -117,8 +117,8 @@ def _make_submission_files(pred, image_id, affine):
 
 
 def predict(args):
-    batch_size = 16
-    num_workers = 4
+    batch_size = 32
+    num_workers = 0
     postprocess = True if args.postprocess == "True" else False
 
     model = UNet(1, 1, first_out_channels=16)
@@ -138,7 +138,7 @@ def predict(args):
     image_id_list = [os.path.basename(path).split("-")[0]
         for path in image_path_list]
 
-    progress = tqdm(total=len(image_id_list))
+    # progress = tqdm(total=len(image_id_list))
     pred_info_list = []
     for image_id, image_path in zip(image_id_list, image_path_list):
         dataset = FracNetInferenceDataset(image_path, transforms=transforms)
@@ -152,7 +152,7 @@ def predict(args):
         pred_path = os.path.join(args.pred_dir, f"{image_id}_pred.nii.gz")
         nib.save(pred_image, pred_path)
 
-        progress.update()
+        # progress.update()
 
     pred_info = pd.concat(pred_info_list, ignore_index=True)
     pred_info.to_csv(os.path.join(args.pred_dir, "pred_info.csv"),

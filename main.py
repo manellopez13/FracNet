@@ -1,5 +1,6 @@
 from functools import partial
 
+import torch
 from torch import save, nn
 
 from fastai.basic_train import Learner
@@ -13,6 +14,8 @@ from utils.metrics import dice, recall, precision, fbeta_score
 from model.unet import UNet
 from model.losses import MixLoss, DiceLoss
 
+PRINT_MEMORY = False
+
 
 def main(args):
     train_image_dir = args.train_image_dir
@@ -20,7 +23,7 @@ def main(args):
     val_image_dir = args.val_image_dir
     val_label_dir = args.val_label_dir
 
-    batch_size = 4
+    batch_size = 32
     num_workers = 0
     optimizer = optim.SGD
     criterion = MixLoss(nn.BCEWithLogitsLoss(), 0.5, DiceLoss(), 1)
@@ -32,6 +35,19 @@ def main(args):
 
     model = UNet(1, 1, first_out_channels=16)
     model = nn.DataParallel(model.cuda())
+
+    if PRINT_MEMORY:
+        print("Total GPUs available:", torch.cuda.device_count())
+
+        curdev = torch.cuda.current_device()
+        print("Current device:", curdev)
+
+        t = torch.cuda.get_device_properties(curdev).total_memory
+        print(f"Total memory: {t/1024**3:.2f} GB")
+        r = torch.cuda.memory_reserved(curdev)
+        a = torch.cuda.memory_allocated(curdev)
+        print(f"Reserved memory: {r/1024**3:.2f} GB")
+        print(f"Allocated memory: {a/1024**3:.2f} GB")
 
     transforms = [
         tsfm.Window(-200, 1000),
@@ -58,7 +74,7 @@ def main(args):
     )
 
     learn.fit_one_cycle(
-        200,
+        100,
         1e-1,
         pct_start=0,
         div_factor=1000,

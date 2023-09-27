@@ -138,4 +138,8 @@ fastai/
 fastprogress/
 
 # Output files
+output_train/
+output_test/
+output_pred/
 *.out
+*.pth
