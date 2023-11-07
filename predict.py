@@ -117,8 +117,8 @@ def _make_submission_files(pred, image_id, affine):
 
 
 def predict(args):
-    batch_size = 32
-    num_workers = 0
+    batch_size = 16
+    num_workers = 4
     postprocess = True if args.postprocess == "True" else False
 
     model = UNet(1, 1, first_out_channels=16)

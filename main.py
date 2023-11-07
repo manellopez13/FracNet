@@ -3,6 +3,8 @@ from functools import partial
 import torch
 from torch import save, nn
 
+from torchinfo import summary
+
 from fastai.basic_train import Learner
 from fastai.train import ShowGraph
 from fastai.data_block import DataBunch
@@ -14,7 +16,7 @@ from utils.metrics import dice, recall, precision, fbeta_score
 from model.unet import UNet
 from model.losses import MixLoss, DiceLoss
 
-PRINT_MEMORY = False
+PRINT_MEMORY = True
 
 
 def main(args):
@@ -23,8 +25,8 @@ def main(args):
     val_image_dir = args.val_image_dir
     val_label_dir = args.val_label_dir
 
-    batch_size = 32
-    num_workers = 0
+    batch_size = 4
+    num_workers = 4
     optimizer = optim.SGD
     criterion = MixLoss(nn.BCEWithLogitsLoss(), 0.5, DiceLoss(), 1)
 
@@ -35,6 +37,10 @@ def main(args):
 
     model = UNet(1, 1, first_out_channels=16)
     model = nn.DataParallel(model.cuda())
+
+    # Print summary of model
+    x = torch.rand(16, 1, 64, 64, 64)
+    print(str(summary(model=model, input_data=x, verbose=0)))
 
     if PRINT_MEMORY:
         print("Total GPUs available:", torch.cuda.device_count())
@@ -74,7 +80,7 @@ def main(args):
     )
 
     learn.fit_one_cycle(
-        100,
+        200,
         1e-1,
         pct_start=0,
         div_factor=1000,
@@ -84,7 +90,7 @@ def main(args):
     )
 
     if args.save_model:
-        save(model.module.state_dict(), "./model_weights.pth")
+        save(model.module.state_dict(), "./output_train/model_weights.pth")
 
 
 if __name__ == "__main__":

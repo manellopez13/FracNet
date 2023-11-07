@@ -2,17 +2,17 @@
 
 #--- NAME
 #SBATCH --job-name frac_train
-#SBATCH --output output_train/slurm-%J.out
+#SBATCH --output output_train/slurm-%j.out
 
 #--- CPU
 #SBATCH --mem 64G
 
 #--- GPU
 #SBATCH -p private-cui-gpu
-#SBATCH --gres=gpu:8,VramPerGpu:10G
+#SBATCH --gres=gpu:1,VramPerGpu:10G
 
 #--- Time
-#SBATCH -t 30:00:00
+#SBATCH -t 60:00:00
 
 #--- Load modules.
 module purge
@@ -21,6 +21,7 @@ module load PyTorch/1.11.0-CUDA-11.3.1
 module load NiBabel/3.2.1
 module load matplotlib/3.4.2
 module load scikit-image/0.18.1
+module load torchinfo/1.5.2-PyTorch-1.11.0-CUDA-11.3.1
 
 #--- Outputs details about the node and cores used.
 nvidia-smi

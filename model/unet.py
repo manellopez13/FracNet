@@ -26,10 +26,10 @@ class UNet(nn.Module):
 
     def forward(self, x):
 
-        # print("Forward!")
-        # print(torch.cuda.memory_allocated(torch.cuda.current_device()))
+        print("Forward!")
+        print(torch.cuda.memory_allocated(torch.cuda.current_device()))
 
-        # print("Input size:", x.size())
+        print("Input size:", x.size())
 
         x1 = self.first(x)
         x2 = self.down1(x1)

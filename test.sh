@@ -26,4 +26,4 @@ module load scikit-image/0.18.1
 nvidia-smi
 
 #--- Execute script.
-python -m predict --image_dir ../data/ribfrac-val-images --pred_dir output_pred --model_path model_weights.pth
+python -m predict --image_dir ../data/ribfrac-val-images --pred_dir output_test --model_path output_train/model_weights.pth
