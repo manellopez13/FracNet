@@ -12,7 +12,7 @@
 #SBATCH --gres=gpu:1,VramPerGpu:10G
 
 #--- Time
-#SBATCH -t 60:00:00
+#SBATCH -t 3-00:00:00
 
 #--- Load modules.
 module purge

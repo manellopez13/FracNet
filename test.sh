@@ -8,11 +8,11 @@
 #SBATCH --mem 64G
 
 #--- GPU
-#SBATCH -p shared-gpu
-#SBATCH --gres=gpu:8,VramPerGpu:10G
+#SBATCH -p private-cui-gpu
+#SBATCH --gres=gpu:1,VramPerGpu:10G
 
 #--- Time
-#SBATCH -t 4:00:00
+#SBATCH -t 60:00:00
 
 #--- Load modules.
 module purge

@@ -1,8 +1,6 @@
 import torch
 import torch.nn as nn
 
-PRINT_MEMORY = False
-
 
 class UNet(nn.Module):
     def __init__(self, in_channels, num_classes, first_out_channels=16):
@@ -26,11 +24,6 @@ class UNet(nn.Module):
 
     def forward(self, x):
 
-        print("Forward!")
-        print(torch.cuda.memory_allocated(torch.cuda.current_device()))
-
-        print("Input size:", x.size())
-
         x1 = self.first(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
@@ -39,17 +32,6 @@ class UNet(nn.Module):
         x  = self.up2(x, x2)
         x  = self.up3(x, x1)
         x  = self.final(x)
-
-        if PRINT_MEMORY:
-            curdev = torch.cuda.current_device()
-            print("Current device:", curdev)
-
-            t = torch.cuda.get_device_properties(curdev).total_memory
-            print(f"Total memory: {t/1024**3:.2f} GB")
-            r = torch.cuda.memory_reserved(curdev)
-            a = torch.cuda.memory_allocated(curdev)
-            print(f"Reserved memory: {r/1024**3:.2f} GB")
-            print(f"Allocated memory: {a/1024**3:.2f} GB")
 
         return x
 

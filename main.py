@@ -16,8 +16,6 @@ from utils.metrics import dice, recall, precision, fbeta_score
 from model.unet import UNet
 from model.losses import MixLoss, DiceLoss
 
-PRINT_MEMORY = True
-
 
 def main(args):
     train_image_dir = args.train_image_dir
@@ -41,19 +39,6 @@ def main(args):
     # Print summary of model
     x = torch.rand(16, 1, 64, 64, 64)
     print(str(summary(model=model, input_data=x, verbose=0)))
-
-    if PRINT_MEMORY:
-        print("Total GPUs available:", torch.cuda.device_count())
-
-        curdev = torch.cuda.current_device()
-        print("Current device:", curdev)
-
-        t = torch.cuda.get_device_properties(curdev).total_memory
-        print(f"Total memory: {t/1024**3:.2f} GB")
-        r = torch.cuda.memory_reserved(curdev)
-        a = torch.cuda.memory_allocated(curdev)
-        print(f"Reserved memory: {r/1024**3:.2f} GB")
-        print(f"Allocated memory: {a/1024**3:.2f} GB")
 
     transforms = [
         tsfm.Window(-200, 1000),
