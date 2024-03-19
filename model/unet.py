@@ -23,7 +23,6 @@ class UNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
-
         x1 = self.first(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
@@ -32,7 +31,6 @@ class UNet(nn.Module):
         x  = self.up2(x, x2)
         x  = self.up3(x, x1)
         x  = self.final(x)
-
         return x
 
 
